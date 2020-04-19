@@ -23,7 +23,9 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from basic.views import (
     TemplateBookView,
-    TemplateBooksView
+    TemplateBooksView,
+    BookView,
+    BooksView,
 )
 
 schema_view = get_schema_view(
@@ -39,7 +41,9 @@ schema_view = get_schema_view(
 
 urlpatterns_api = [
     path('api/tmpl-books', TemplateBooksView.as_view()),
-    path('api/tmpl-book/<int:pk>', TemplateBookView.as_view())
+    path('api/tmpl-book/<int:pk>', TemplateBookView.as_view()),
+    # path('api/books', BooksView.as_view()), #
+    # path('api/book/<int:pk>', BookView.as_view()), #
 ]
 
 urlpatterns = urlpatterns_api + [

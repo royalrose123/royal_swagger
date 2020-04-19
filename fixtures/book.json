@@ -1,0 +1,35 @@
+[
+{
+    "model": "basic.book",
+    "pk": 1,
+    "fields": {
+        "name": "Tuesday with Morry",
+        "price": 100,
+        "rent_price": null,
+        "created_at": "2020-04-19",
+        "updated_at": "2020-04-19"
+    }
+},
+{
+    "model": "basic.book",
+    "pk": 2,
+    "fields": {
+        "name": "The old man and the sea",
+        "price": 120,
+        "rent_price": 20,
+        "created_at": "2020-04-19",
+        "updated_at": "2020-04-19"
+    }
+},
+{
+    "model": "basic.book",
+    "pk": 3,
+    "fields": {
+        "name": "Different Seasons",
+        "price": 240,
+        "rent_price": 20,
+        "created_at": "2020-04-19",
+        "updated_at": "2020-04-19"
+    }
+}
+]
