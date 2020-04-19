@@ -16,10 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import (
     path,
-    re_path
+    re_path,
+    include
 )
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from basic.views import (
+    TemplateBookView,
+    TemplateBooksView
+)
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -32,9 +37,12 @@ schema_view = get_schema_view(
    ),
 )
 
-# urlpatterns_api = []
+urlpatterns_api = [
+    path('api/tmpl-books', TemplateBooksView.as_view()),
+    path('api/tmpl-book/<int:pk>', TemplateBookView.as_view())
+]
 
-urlpatterns = [
+urlpatterns = urlpatterns_api + [
     path('admin/', admin.site.urls),
     re_path(r'^$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
