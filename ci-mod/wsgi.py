@@ -1,5 +1,5 @@
 """
-WSGI config for mod project.
+WSGI config for ci-mod project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mod.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ci-mod.settings')
 
 application = get_wsgi_application()
