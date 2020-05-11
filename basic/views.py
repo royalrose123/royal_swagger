@@ -2,7 +2,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import GenericAPIView
 from django.http import JsonResponse
-from basic.models import Book
+from basic.models import Book, User
 
 """
     01. Basic API
@@ -159,6 +159,17 @@ class BooksView(GenericAPIView):
     @swagger_auto_schema(operation_summary="Get all the books.")
     def get(self, request):
         data = []
+        books = Book.objects.all()
+
+        for book in books:
+            data.append(
+                {
+                    "id": book.id,
+                    "name": book.name,
+                    "price": book.price,
+                    "rent_price": book.rent_price,
+                }
+            )
 
         return JsonResponse(data, safe=False)
 
@@ -185,6 +196,16 @@ class BooksView(GenericAPIView):
     def post(self, request):
         data = request.data.copy()
 
+        name = request.data.get('name')
+        price = request.data.get('price')
+        rent_price = request.data.get('rent_price')
+
+        Book.objects.create(
+            name = name,
+            price = price,
+            rent_price = rent_price
+        )
+
         return JsonResponse(data)
 
 
@@ -193,7 +214,14 @@ class BookView(GenericAPIView):
 
     @swagger_auto_schema(operation_summary="Get a book by id.")
     def get(self, request, pk):
-        data = {}
+        book = self.get_object()
+
+        data = {
+            "id": book.id,
+            "name": book.name,
+            "price": book.price,
+            "rent_price": book.rent_price
+        }
 
         return JsonResponse(data)
 
@@ -218,12 +246,72 @@ class BookView(GenericAPIView):
         )
     )
     def put(self, request, pk):
-        data = {}
+        book = self.get_object()
+
+        data = request.data.copy()
+
+        name = request.data.get('name')
+        price = request.data.get('price')
+        rent_price = request.data.get('rent_price')
+        
+        book.name = name
+        book.price = price
+        book.rent_price = rent_price
+        book.save()
 
         return JsonResponse(data)
 
     @swagger_auto_schema(operation_summary="Delete a book.")
     def delete(self, request, pk):
-        data = {}
+        book = self.get_object()
+        book.delete()
+
+        return JsonResponse({'response': 'Delete successfully!!!'})
+
+class UserView(GenericAPIView):
+    queryset = User.objects.all()
+
+    @swagger_auto_schema(
+        operation_summary="User log in.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'username': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description='username'
+                ),
+                'password': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description='password'
+                ),
+            }
+        )
+    )
+    def post(self, request):
+        data = request.data.copy()
+
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        User.objects.create(
+            username = username,
+            password = password,
+        )
 
         return JsonResponse(data)
+
+    @swagger_auto_schema(operation_summary="Get all users.")
+    def get(self, request):
+        data = []
+        users = User.objects.all()
+
+        for user in users:
+            data.append(
+                {
+                    "id": user.id,
+                    "username": user.username,
+                    "password": user.password,
+                }
+            )
+
+        return JsonResponse(data, safe=False)
