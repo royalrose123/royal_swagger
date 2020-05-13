@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # CI-Module
 
 ## Setup
@@ -22,6 +21,4 @@ basic
 ├── tests.py
 └── views.py (target)
 ```
-=======
 # royal_swagger
->>>>>>> 25fbd42137f1bed8feb473d0ea6f76b3dad6afd2
