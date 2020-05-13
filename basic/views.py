@@ -2,7 +2,9 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import GenericAPIView
 from django.http import JsonResponse
+from basic.serializers import UserSerializer 
 from basic.models import Book, User
+from django.db import transaction
 
 """
     01. Basic API
@@ -270,15 +272,36 @@ class BookView(GenericAPIView):
 
 class UserView(GenericAPIView):
     queryset = User.objects.all()
+    
+    @swagger_auto_schema(
+        operation_summary='Get user info'
+    )
+    def get(self, request, pk):
+        data = {}
+        try:
+            user = User.objects.get(id=pk)
+            data = {
+                "id": user.id,
+                "username": user.username,
+                "password": user.password,
+                "email": user.email
+            }
+        except Exception as e:
+            data = {'error': str(e)}
+            
+        return JsonResponse(data)
+
+class LoginView(GenericAPIView):
+    queryset = User.objects.all()
 
     @swagger_auto_schema(
-        operation_summary="User log in.",
+        operation_summary="User login",
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
                 'username': openapi.Schema(
                     type=openapi.TYPE_STRING,
-                    description='username'
+                    description='user name'
                 ),
                 'password': openapi.Schema(
                     type=openapi.TYPE_STRING,
@@ -288,30 +311,34 @@ class UserView(GenericAPIView):
         )
     )
     def post(self, request):
-        data = request.data.copy()
+        data = request.data
+        username = data.get('username', '')
+        password = data.get('password', '')
+        
+        try:
+            user = User.objects.get(username=username,password=password)
+        except Exception as e:
+            data = {'error': 'Username or password is wrong.'}
 
-        username = request.data.get('username')
-        password = request.data.get('password')
-
-        User.objects.create(
-            username = username,
-            password = password,
-        )
 
         return JsonResponse(data)
+    
 
-    @swagger_auto_schema(operation_summary="Get all users.")
-    def get(self, request):
-        data = []
-        users = User.objects.all()
+class AdminView(GenericAPIView):
+    serializer_class = UserSerializer
 
-        for user in users:
-            data.append(
-                {
-                    "id": user.id,
-                    "username": user.username,
-                    "password": user.password,
-                }
-            )
+    @swagger_auto_schema(
+        operation_summary="Create user",
+    )
+    def post(self, request, *args, **krgs):
+        data = request.data
+        try:
+            serializer = self.serializer_class(data=data)
+            serializer.is_valid(raise_exception=True)
+            with transaction.atomic():
+                serializer.save()
+            data = serializer.data
+        except Exception as e:
+            data = {'error': str(e)}
+        return JsonResponse(data)
 
-        return JsonResponse(data, safe=False)

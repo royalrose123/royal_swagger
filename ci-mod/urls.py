@@ -27,6 +27,8 @@ from basic.views import (
     BookView,
     BooksView,
     UserView,
+    LoginView,
+    AdminView,
 )
 
 schema_view = get_schema_view(
@@ -45,7 +47,9 @@ urlpatterns_api = [
     path('api/tmpl-book/<int:pk>', TemplateBookView.as_view()),
     path('api/books', BooksView.as_view()), 
     path('api/book/<int:pk>', BookView.as_view()), 
-    path('api/user', UserView.as_view()), 
+    path('api/user', AdminView.as_view()), 
+    path('api/user/login', LoginView.as_view()), 
+    path('api/user/<int:pk>', UserView.as_view()), 
 ]
 
 urlpatterns = urlpatterns_api + [
