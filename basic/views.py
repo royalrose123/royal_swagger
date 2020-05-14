@@ -5,6 +5,8 @@ from django.http import JsonResponse
 from basic.serializers import UserSerializer 
 from basic.models import Book, User
 from django.db import transaction
+import jwt
+
 
 """
     01. Basic API
@@ -311,12 +313,25 @@ class LoginView(GenericAPIView):
         )
     )
     def post(self, request):
+        
         data = request.data
         username = data.get('username', '')
         password = data.get('password', '')
         
         try:
             user = User.objects.get(username=username,password=password)
+            data = {}
+
+            payload = {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "phone": user.phone
+            }
+            
+            token = jwt.encode(payload, 'secret')
+            data["token"] = token.decode("utf-8")
+
         except Exception as e:
             data = {'error': 'Username or password is wrong.'}
 
