@@ -286,8 +286,11 @@ class UserView(GenericAPIView):
                 "id": user.id,
                 "username": user.username,
                 "password": user.password,
-                "email": user.email
+                "email": user.email,
+                "created_at": user.created_at,
+                "updated_at": user.updated_at
             }
+
         except Exception as e:
             data = {'error': str(e)}
             
@@ -320,13 +323,13 @@ class LoginView(GenericAPIView):
         
         try:
             user = User.objects.get(username=username,password=password)
-            data = {}
 
+            data = {}
             payload = {
                 "id": user.id,
                 "username": user.username,
                 "email": user.email,
-                "phone": user.phone
+                "phone": user.phone,
             }
             
             token = jwt.encode(payload, 'secret')
@@ -334,7 +337,6 @@ class LoginView(GenericAPIView):
 
         except Exception as e:
             data = {'error': 'Username or password is wrong.'}
-
 
         return JsonResponse(data)
     
