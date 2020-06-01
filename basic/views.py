@@ -47,7 +47,7 @@ class TemplateBooksView(GenericAPIView):
             )
 
         return JsonResponse(data, safe=False)
-
+        
     @swagger_auto_schema(
         operation_summary="Create a book.",
         request_body=openapi.Schema(
@@ -68,20 +68,17 @@ class TemplateBooksView(GenericAPIView):
             }
         )
     )
-    def post(self, request):
-        data = request.data.copy()
-        name = request.data.get('name')
-        price = request.data.get('price')
-        rent_price = request.data.get('rent_price')
-
-        Book.objects.create(
-            name=name,
-            price=price,
-            rent_price=rent_price
-        )
-
+    def post(self, request, *args):
+        data = request.data
+        try:
+            serializer = self.serializer_class(data=data)
+            serializer.is_valid(raise_exception=True)
+            with transaction.atomic():
+                serializer.save()
+            data = serializer.data
+        except Exception as e:
+            data = {'error': str(e)}
         return JsonResponse(data)
-
 
 class TemplateBookView(GenericAPIView):
     queryset = Book.objects.all()
@@ -264,6 +261,7 @@ class BookView(GenericAPIView):
         book.save()
 
         return JsonResponse(data)
+
 
     @swagger_auto_schema(operation_summary="Delete a book.")
     def delete(self, request, pk):
