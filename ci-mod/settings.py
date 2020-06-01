@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+from corsheaders.defaults import default_headers
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -110,6 +112,14 @@ CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1:3000"
     # your React App domain
 ]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Access-Control-Allow-Credentials',
+    'authorization',
+    'cookies'
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Internationalization
