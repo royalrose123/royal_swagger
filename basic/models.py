@@ -29,4 +29,15 @@ class User(models.Model):
 
     class Meta:
         db_table = "user"
+        
+
+class Todos(models.Model):
+    id = models.AutoField(primary_key=True, db_column="uid")
+    is_completed = models.BooleanField(default=False, db_column="is_completed")
+    title = models.CharField(max_length=20, null=False, blank=False, db_column="title")
+
+    objects = models.Manager()
+
+    class Meta:
+        db_table = "todos"
 

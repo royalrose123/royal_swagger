@@ -29,6 +29,7 @@ from basic.views import (
     UserView,
     LoginView,
     AdminView,
+    TodosView,
 )
 
 schema_view = get_schema_view(
@@ -50,6 +51,7 @@ urlpatterns_api = [
     path('api/user', AdminView.as_view()), 
     path('api/user/login', LoginView.as_view()), 
     path('api/user/<int:pk>', UserView.as_view()), 
+    path('api/todos', TodosView.as_view()), 
 ]
 
 urlpatterns = urlpatterns_api + [

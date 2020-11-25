@@ -1,0 +1,43 @@
+[
+    {
+        "model": "basic.todos",
+        "pk": 1,
+        "fields": {
+            "is_completed": false,
+            "title": "買菜"
+        }
+    },
+    {
+        "model": "basic.todos",
+        "pk": 2,
+        "fields": {
+            "is_completed": true,
+            "title": "洗澡"
+        }
+    },
+    {
+        "model": "basic.todos",
+        "pk": 3,
+        "fields": {
+            "is_completed": false,
+            "title": "刷牙"
+        }
+    },
+    {
+        "model": "basic.todos",
+        "pk": 4,
+        "fields": {
+            "is_completed": true,
+            "title": "上學"
+        }
+    },
+    {
+        "model": "basic.todos",
+        "pk": 5,
+        "fields": {
+            "is_completed": false,
+            "title": "睡覺"
+        }
+    }
+]
+    

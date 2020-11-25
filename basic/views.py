@@ -3,7 +3,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import GenericAPIView
 from django.http import JsonResponse
 from basic.serializers import UserSerializer 
-from basic.models import Book, User
+from basic.models import Book, User, Todos
 from django.db import transaction
 import jwt
 
@@ -357,3 +357,54 @@ class AdminView(GenericAPIView):
             data = {'error': str(e)}
         return JsonResponse(data)
 
+
+class TodosView(GenericAPIView):
+    queryset = Todos.objects.all()
+
+    @swagger_auto_schema(operation_summary="Get all the todos.")
+    def get(self, request):
+        data = []
+        todos = Todos.objects.all()
+
+        for todo in todos:
+            data.append(
+                {
+                    "id": todo.id,
+                    "title": todo.title,
+                    "is_completed": todo.is_completed,
+                }
+            )
+
+        return JsonResponse(data, safe=False)
+
+    @swagger_auto_schema(
+        operation_summary="Create a todo.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'title': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description='name of todo'
+                ),
+                'is_completed': openapi.Schema(
+                    type=openapi.TYPE_BOOLEAN,
+                    description='is completed'
+                ),
+            }
+        )
+    )
+    def post(self, request):
+        data = request.data.copy()
+
+        title = request.data.get('title')
+        is_completed = request.data.get('is_completed')
+
+        Todos.objects.create(
+            title = title,
+            is_completed = is_completed,
+        )
+
+        return JsonResponse(data)
+
+  
+    
