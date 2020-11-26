@@ -108,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Add CORS_ORIGIN_WHITELIST to allow these domains be authorized to make cross-site HTTP requests
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000",
+    "http://localhost:4000",
     "http://127.0.0.1:3000"
     # your React App domain
 ]
